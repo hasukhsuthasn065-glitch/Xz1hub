@@ -1,5 +1,5 @@
--- XZ1Hub Library - Kavo UI Style
--- Version: 1.0 Final
+-- XZ1Hub Library - Kavo UI Style (Enhanced Edition)
+-- Version: 2.0 - Resizable & Draggable
 -- Made by XZ1Hub Team
 
 local Library = {}
@@ -27,13 +27,118 @@ function Library:CreateWindow(config)
         GUI.Parent = game.Players.LocalPlayer.PlayerGui
     end
     
-    -- Main Frame
+    -- ===================================
+    -- 🎯 FLOATING ICON (Draggable + Resizable)
+    -- ===================================
+    local Icon = Instance.new("ImageButton")
+    Icon.Name = "FloatingIcon"
+    Icon.Size = UDim2.new(0, 70, 0, 70)
+    Icon.Position = UDim2.new(0, 20, 0, 20)
+    Icon.BackgroundColor3 = Color3.fromRGB(30, 30, 42)
+    Icon.BorderSizePixel = 0
+    Icon.Image = "rbxassetid://113198415304041"
+    Icon.ScaleType = Enum.ScaleType.Fit
+    Icon.Parent = GUI
+    
+    local IconCorner = Instance.new("UICorner", Icon)
+    IconCorner.CornerRadius = UDim.new(0, 12)
+    
+    local IconStroke = Instance.new("UIStroke", Icon)
+    IconStroke.Color = Color3.fromRGB(60, 120, 220)
+    IconStroke.Thickness = 2
+    
+    -- Icon Shadow
+    local IconShadow = Instance.new("ImageLabel", Icon)
+    IconShadow.Name = "Shadow"
+    IconShadow.Size = UDim2.new(1, 20, 1, 20)
+    IconShadow.Position = UDim2.new(0, -10, 0, -10)
+    IconShadow.BackgroundTransparency = 1
+    IconShadow.Image = "rbxassetid://5554236805"
+    IconShadow.ImageColor3 = Color3.fromRGB(0, 0, 0)
+    IconShadow.ImageTransparency = 0.7
+    IconShadow.ZIndex = 0
+    
+    -- Icon Resize Handle (มุมขวาล่าง)
+    local IconResize = Instance.new("TextButton", Icon)
+    IconResize.Name = "ResizeHandle"
+    IconResize.Size = UDim2.new(0, 20, 0, 20)
+    IconResize.Position = UDim2.new(1, -20, 1, -20)
+    IconResize.BackgroundColor3 = Color3.fromRGB(60, 120, 220)
+    IconResize.Text = "⇲"
+    IconResize.TextColor3 = Color3.fromRGB(255, 255, 255)
+    IconResize.Font = Enum.Font.GothamBold
+    IconResize.TextSize = 12
+    IconResize.BorderSizePixel = 0
+    Instance.new("UICorner", IconResize).CornerRadius = UDim.new(0, 6)
+    
+    -- Icon Dragging
+    local iconDragging = false
+    local iconDragStart, iconStartPos
+    
+    Icon.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            iconDragging = true
+            iconDragStart = input.Position
+            iconStartPos = Icon.Position
+        end
+    end)
+    
+    UserInputService.InputChanged:Connect(function(input)
+        if iconDragging and input.UserInputType == Enum.UserInputType.MouseMovement then
+            local delta = input.Position - iconDragStart
+            Icon.Position = UDim2.new(iconStartPos.X.Scale, iconStartPos.X.Offset + delta.X, iconStartPos.Y.Scale, iconStartPos.Y.Offset + delta.Y)
+        end
+    end)
+    
+    UserInputService.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            iconDragging = false
+        end
+    end)
+    
+    -- Icon Resizing
+    local iconResizing = false
+    local iconResizeStart, iconStartSize
+    
+    IconResize.MouseButton1Down:Connect(function()
+        iconResizing = true
+        iconResizeStart = UserInputService:GetMouseLocation()
+        iconStartSize = Icon.Size
+    end)
+    
+    UserInputService.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            iconResizing = false
+        end
+    end)
+    
+    UserInputService.InputChanged:Connect(function(input)
+        if iconResizing and input.UserInputType == Enum.UserInputType.MouseMovement then
+            local mouse = UserInputService:GetMouseLocation()
+            local delta = mouse - iconResizeStart
+            local newSize = iconStartSize + UDim2.new(0, delta.X, 0, delta.Y)
+            
+            -- Min/Max size
+            local minSize = 50
+            local maxSize = 150
+            local width = math.clamp(newSize.X.Offset, minSize, maxSize)
+            local height = math.clamp(newSize.Y.Offset, minSize, maxSize)
+            
+            Icon.Size = UDim2.new(0, width, 0, height)
+        end
+    end)
+    
+    -- ===================================
+    -- 🖼️ MAIN FRAME (Draggable + Resizable)
+    -- ===================================
     local Main = Instance.new("Frame")
+    Main.Name = "MainFrame"
     Main.Size = UDim2.new(0, 550, 0, 450)
     Main.Position = UDim2.new(0.5, -275, 0.5, -225)
     Main.BackgroundColor3 = Color3.fromRGB(25, 25, 35)
     Main.BorderSizePixel = 0
     Main.ClipsDescendants = true
+    Main.Visible = false
     Main.Parent = GUI
     
     Instance.new("UICorner", Main).CornerRadius = UDim.new(0, 6)
@@ -41,24 +146,38 @@ function Library:CreateWindow(config)
     MainStroke.Color = Color3.fromRGB(60, 60, 80)
     MainStroke.Thickness = 1
     
+    -- Main Shadow
+    local MainShadow = Instance.new("ImageLabel", Main)
+    MainShadow.Name = "Shadow"
+    MainShadow.Size = UDim2.new(1, 40, 1, 40)
+    MainShadow.Position = UDim2.new(0, -20, 0, -20)
+    MainShadow.BackgroundTransparency = 1
+    MainShadow.Image = "rbxassetid://5554236805"
+    MainShadow.ImageColor3 = Color3.fromRGB(0, 0, 0)
+    MainShadow.ImageTransparency = 0.6
+    MainShadow.ZIndex = 0
+    
     -- Top Bar
     local TopBar = Instance.new("Frame", Main)
+    TopBar.Name = "TopBar"
     TopBar.Size = UDim2.new(1, 0, 0, 40)
     TopBar.BackgroundColor3 = Color3.fromRGB(30, 30, 42)
     TopBar.BorderSizePixel = 0
     Instance.new("UICorner", TopBar).CornerRadius = UDim.new(0, 6)
     
-    -- Logo
+    -- Logo in TopBar
     local Logo = Instance.new("ImageLabel", TopBar)
+    Logo.Name = "Logo"
     Logo.Size = UDim2.new(0, 28, 0, 28)
     Logo.Position = UDim2.new(0, 8, 0, 6)
     Logo.BackgroundTransparency = 1
-    Logo.Image = "rbxassetid://113198415304"
+    Logo.Image = "rbxassetid://113198415304041"
     Logo.ScaleType = Enum.ScaleType.Fit
     
     -- Title
     local Title = Instance.new("TextLabel", TopBar)
-    Title.Size = UDim2.new(1, -100, 1, 0)
+    Title.Name = "Title"
+    Title.Size = UDim2.new(1, -120, 1, 0)
     Title.Position = UDim2.new(0, 42, 0, 0)
     Title.BackgroundTransparency = 1
     Title.Text = config.Title or "XZ1Hub"
@@ -67,8 +186,23 @@ function Library:CreateWindow(config)
     Title.TextSize = 15
     Title.TextXAlignment = Enum.TextXAlignment.Left
     
+    -- Minimize Button
+    local MinimizeBtn = Instance.new("TextButton", TopBar)
+    MinimizeBtn.Name = "MinimizeBtn"
+    MinimizeBtn.Size = UDim2.new(0, 30, 0, 30)
+    MinimizeBtn.Position = UDim2.new(1, -70, 0, 5)
+    MinimizeBtn.BackgroundColor3 = Color3.fromRGB(220, 160, 60)
+    MinimizeBtn.Text = "−"
+    MinimizeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    MinimizeBtn.Font = Enum.Font.GothamBold
+    MinimizeBtn.TextSize = 16
+    MinimizeBtn.BorderSizePixel = 0
+    MinimizeBtn.AutoButtonColor = false
+    Instance.new("UICorner", MinimizeBtn).CornerRadius = UDim.new(0, 4)
+    
     -- Close Button
     local CloseBtn = Instance.new("TextButton", TopBar)
+    CloseBtn.Name = "CloseBtn"
     CloseBtn.Size = UDim2.new(0, 30, 0, 30)
     CloseBtn.Position = UDim2.new(1, -35, 0, 5)
     CloseBtn.BackgroundColor3 = Color3.fromRGB(230, 60, 60)
@@ -80,12 +214,23 @@ function Library:CreateWindow(config)
     CloseBtn.AutoButtonColor = false
     Instance.new("UICorner", CloseBtn).CornerRadius = UDim.new(0, 4)
     
-    CloseBtn.MouseEnter:Connect(function() Tween(CloseBtn, {BackgroundColor3 = Color3.fromRGB(255, 70, 70)}) end)
-    CloseBtn.MouseLeave:Connect(function() Tween(CloseBtn, {BackgroundColor3 = Color3.fromRGB(230, 60, 60)}) end)
-    CloseBtn.MouseButton1Click:Connect(function() GUI:Destroy() end)
+    -- Main Resize Handle (มุมขวาล่าง)
+    local MainResize = Instance.new("TextButton", Main)
+    MainResize.Name = "ResizeHandle"
+    MainResize.Size = UDim2.new(0, 25, 0, 25)
+    MainResize.Position = UDim2.new(1, -25, 1, -25)
+    MainResize.BackgroundColor3 = Color3.fromRGB(60, 120, 220)
+    MainResize.Text = "⇲"
+    MainResize.TextColor3 = Color3.fromRGB(255, 255, 255)
+    MainResize.Font = Enum.Font.GothamBold
+    MainResize.TextSize = 14
+    MainResize.BorderSizePixel = 0
+    MainResize.ZIndex = 1000
+    Instance.new("UICorner", MainResize).CornerRadius = UDim.new(0, 6)
     
     -- Tab Container
     local TabContainer = Instance.new("Frame", Main)
+    TabContainer.Name = "TabContainer"
     TabContainer.Size = UDim2.new(0, 140, 1, -45)
     TabContainer.Position = UDim2.new(0, 5, 0, 45)
     TabContainer.BackgroundTransparency = 1
@@ -95,12 +240,40 @@ function Library:CreateWindow(config)
     
     -- Page Container
     local PageContainer = Instance.new("Frame", Main)
+    PageContainer.Name = "PageContainer"
     PageContainer.Size = UDim2.new(1, -150, 1, -50)
     PageContainer.Position = UDim2.new(0, 145, 0, 45)
     PageContainer.BackgroundTransparency = 1
     
-    -- Dragging
-    local dragging, dragInput, dragStart, startPos
+    -- ===================================
+    -- 🎮 GUI CONTROLS
+    -- ===================================
+    
+    -- Toggle GUI Visibility
+    Icon.MouseButton1Click:Connect(function()
+        Main.Visible = not Main.Visible
+    end)
+    
+    MinimizeBtn.MouseButton1Click:Connect(function()
+        Main.Visible = false
+    end)
+    
+    CloseBtn.MouseButton1Click:Connect(function()
+        GUI:Destroy()
+    end)
+    
+    -- Button Hover Effects
+    MinimizeBtn.MouseEnter:Connect(function() Tween(MinimizeBtn, {BackgroundColor3 = Color3.fromRGB(240, 180, 80)}) end)
+    MinimizeBtn.MouseLeave:Connect(function() Tween(MinimizeBtn, {BackgroundColor3 = Color3.fromRGB(220, 160, 60)}) end)
+    
+    CloseBtn.MouseEnter:Connect(function() Tween(CloseBtn, {BackgroundColor3 = Color3.fromRGB(255, 70, 70)}) end)
+    CloseBtn.MouseLeave:Connect(function() Tween(CloseBtn, {BackgroundColor3 = Color3.fromRGB(230, 60, 60)}) end)
+    
+    -- ===================================
+    -- 🖱️ MAIN FRAME DRAGGING
+    -- ===================================
+    local dragging = false
+    local dragStart, startPos
     
     TopBar.InputBegan:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseButton1 then
@@ -110,14 +283,8 @@ function Library:CreateWindow(config)
         end
     end)
     
-    TopBar.InputChanged:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseMovement then
-            dragInput = input
-        end
-    end)
-    
     UserInputService.InputChanged:Connect(function(input)
-        if input == dragInput and dragging then
+        if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
             local delta = input.Position - dragStart
             Main.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
         end
@@ -129,6 +296,49 @@ function Library:CreateWindow(config)
         end
     end)
     
+    -- ===================================
+    -- 📏 MAIN FRAME RESIZING
+    -- ===================================
+    local resizing = false
+    local resizeStart, startSize
+    
+    MainResize.MouseButton1Down:Connect(function()
+        resizing = true
+        resizeStart = UserInputService:GetMouseLocation()
+        startSize = Main.Size
+    end)
+    
+    UserInputService.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            resizing = false
+        end
+    end)
+    
+    UserInputService.InputChanged:Connect(function(input)
+        if resizing and input.UserInputType == Enum.UserInputType.MouseMovement then
+            local mouse = UserInputService:GetMouseLocation()
+            local delta = mouse - resizeStart
+            local newSize = startSize + UDim2.new(0, delta.X, 0, delta.Y)
+            
+            -- Min/Max size for main GUI
+            local minWidth = 400
+            local maxWidth = 1000
+            local minHeight = 300
+            local maxHeight = 700
+            
+            local width = math.clamp(newSize.X.Offset, minWidth, maxWidth)
+            local height = math.clamp(newSize.Y.Offset, minHeight, maxHeight)
+            
+            Main.Size = UDim2.new(0, width, 0, height)
+            
+            -- Update container sizes
+            PageContainer.Size = UDim2.new(1, -150, 1, -50)
+        end
+    end)
+    
+    -- ===================================
+    -- 📑 TAB SYSTEM
+    -- ===================================
     Window.Tabs = {}
     
     function Window:CreateTab(name)
@@ -136,6 +346,7 @@ function Library:CreateWindow(config)
         
         -- Tab Button
         local TabBtn = Instance.new("TextButton", TabContainer)
+        TabBtn.Name = name
         TabBtn.Size = UDim2.new(1, -10, 0, 32)
         TabBtn.BackgroundColor3 = Color3.fromRGB(35, 35, 48)
         TabBtn.Text = name
@@ -148,6 +359,7 @@ function Library:CreateWindow(config)
         
         -- Tab Page
         local Page = Instance.new("ScrollingFrame", PageContainer)
+        Page.Name = name .. "Page"
         Page.Size = UDim2.new(1, -5, 1, 0)
         Page.BackgroundTransparency = 1
         Page.BorderSizePixel = 0
