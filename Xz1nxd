@@ -32,10 +32,14 @@ function Library:CreateWindow(config)
     -- ===================================
     -- 🌟 ULTRA BEAUTIFUL FLOATING ICON
     -- ===================================
+    
+    -- Check if Mobile
+    local isMobile = UserInputService.TouchEnabled and not UserInputService.KeyboardEnabled
+    
     local IconContainer = Instance.new("Frame")
     IconContainer.Name = "IconContainer"
-    IconContainer.Size = UDim2.new(0, 80, 0, 80)
-    IconContainer.Position = UDim2.new(0, 25, 0, 25)
+    IconContainer.Size = isMobile and UDim2.new(0, 60, 0, 60) or UDim2.new(0, 70, 0, 70)
+    IconContainer.Position = UDim2.new(0, 15, 0, 15)
     IconContainer.BackgroundTransparency = 1
     IconContainer.Parent = GUI
     
@@ -198,10 +202,15 @@ function Library:CreateWindow(config)
     -- ===================================
     -- 🎨 ULTRA BEAUTIFUL MAIN GUI
     -- ===================================
+    
+    -- Responsive Size for Mobile & PC
+    local guiWidth = isMobile and 380 or 550
+    local guiHeight = isMobile and 420 or 480
+    
     local MainBlur = Instance.new("Frame")
     MainBlur.Name = "MainBlur"
-    MainBlur.Size = UDim2.new(0, 600, 0, 500)
-    MainBlur.Position = UDim2.new(0.5, -300, 0.5, -250)
+    MainBlur.Size = UDim2.new(0, guiWidth, 0, guiHeight)
+    MainBlur.Position = UDim2.new(0.5, -guiWidth/2, 0.5, -guiHeight/2)
     MainBlur.BackgroundColor3 = Color3.fromRGB(15, 15, 25)
     MainBlur.BackgroundTransparency = 0.02
     MainBlur.BorderSizePixel = 0
@@ -277,7 +286,7 @@ function Library:CreateWindow(config)
     -- ===================================
     local TopBar = Instance.new("Frame", MainBlur)
     TopBar.Name = "TopBar"
-    TopBar.Size = UDim2.new(1, 0, 0, 50)
+    TopBar.Size = isMobile and UDim2.new(1, 0, 0, 40) or UDim2.new(1, 0, 0, 45)
     TopBar.BackgroundColor3 = Color3.fromRGB(20, 20, 35)
     TopBar.BackgroundTransparency = 0.3
     TopBar.BorderSizePixel = 0
@@ -294,8 +303,8 @@ function Library:CreateWindow(config)
     
     -- Logo Container with Glow
     local LogoContainer = Instance.new("Frame", TopBar)
-    LogoContainer.Size = UDim2.new(0, 38, 0, 38)
-    LogoContainer.Position = UDim2.new(0, 10, 0, 6)
+    LogoContainer.Size = isMobile and UDim2.new(0, 30, 0, 30) or UDim2.new(0, 35, 0, 35)
+    LogoContainer.Position = isMobile and UDim2.new(0, 6, 0, 5) or UDim2.new(0, 8, 0, 5)
     LogoContainer.BackgroundTransparency = 1
     
     local LogoGlow = Instance.new("ImageLabel", LogoContainer)
@@ -328,12 +337,12 @@ function Library:CreateWindow(config)
     -- Title with Gradient
     local Title = Instance.new("TextLabel", TopBar)
     Title.Name = "Title"
-    Title.Size = UDim2.new(0, 300, 1, 0)
-    Title.Position = UDim2.new(0, 55, 0, 0)
+    Title.Size = isMobile and UDim2.new(0, 180, 1, 0) or UDim2.new(0, 250, 1, 0)
+    Title.Position = isMobile and UDim2.new(0, 42, 0, 0) or UDim2.new(0, 50, 0, 0)
     Title.BackgroundTransparency = 1
-    Title.Text = config.Title or "XZ1Hub Premium"
+    Title.Text = config.Title or "XZ1Hub"
     Title.Font = Enum.Font.GothamBold
-    Title.TextSize = 18
+    Title.TextSize = isMobile and 14 or 16
     Title.TextColor3 = Color3.fromRGB(255, 255, 255)
     Title.TextXAlignment = Enum.TextXAlignment.Left
     
@@ -346,19 +355,19 @@ function Library:CreateWindow(config)
     
     -- Status Indicator
     local StatusDot = Instance.new("Frame", TopBar)
-    StatusDot.Size = UDim2.new(0, 8, 0, 8)
-    StatusDot.Position = UDim2.new(1, -120, 0.5, -4)
+    StatusDot.Size = UDim2.new(0, 6, 0, 6)
+    StatusDot.Position = isMobile and UDim2.new(1, -80, 0.5, -3) or UDim2.new(1, -100, 0.5, -3)
     StatusDot.BackgroundColor3 = Color3.fromRGB(80, 255, 120)
     StatusDot.BorderSizePixel = 0
     Instance.new("UICorner", StatusDot).CornerRadius = UDim.new(1, 0)
     
     local StatusLabel = Instance.new("TextLabel", TopBar)
-    StatusLabel.Size = UDim2.new(0, 60, 1, 0)
-    StatusLabel.Position = UDim2.new(1, -108, 0, 0)
+    StatusLabel.Size = UDim2.new(0, 50, 1, 0)
+    StatusLabel.Position = isMobile and UDim2.new(1, -72, 0, 0) or UDim2.new(1, -90, 0, 0)
     StatusLabel.BackgroundTransparency = 1
     StatusLabel.Text = "ACTIVE"
     StatusLabel.Font = Enum.Font.GothamBold
-    StatusLabel.TextSize = 11
+    StatusLabel.TextSize = isMobile and 9 or 10
     StatusLabel.TextColor3 = Color3.fromRGB(80, 255, 120)
     StatusLabel.TextXAlignment = Enum.TextXAlignment.Left
     
@@ -374,18 +383,18 @@ function Library:CreateWindow(config)
     
     -- Minimize Button
     local MinBtn = Instance.new("TextButton", TopBar)
-    MinBtn.Size = UDim2.new(0, 36, 0, 36)
-    MinBtn.Position = UDim2.new(1, -82, 0, 7)
+    MinBtn.Size = isMobile and UDim2.new(0, 28, 0, 28) or UDim2.new(0, 32, 0, 32)
+    MinBtn.Position = isMobile and UDim2.new(1, -62, 0, 6) or UDim2.new(1, -70, 0, 6.5)
     MinBtn.BackgroundColor3 = Color3.fromRGB(255, 180, 50)
     MinBtn.Text = "−"
     MinBtn.Font = Enum.Font.GothamBold
-    MinBtn.TextSize = 20
+    MinBtn.TextSize = isMobile and 16 or 18
     MinBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
     MinBtn.BorderSizePixel = 0
     MinBtn.AutoButtonColor = false
     
     local MinBtnCorner = Instance.new("UICorner", MinBtn)
-    MinBtnCorner.CornerRadius = UDim.new(0, 8)
+    MinBtnCorner.CornerRadius = UDim.new(0, 6)
     
     local MinBtnGradient = Instance.new("UIGradient", MinBtn)
     MinBtnGradient.Color = ColorSequence.new({
@@ -396,18 +405,18 @@ function Library:CreateWindow(config)
     
     -- Close Button
     local CloseBtn = Instance.new("TextButton", TopBar)
-    CloseBtn.Size = UDim2.new(0, 36, 0, 36)
-    CloseBtn.Position = UDim2.new(1, -40, 0, 7)
+    CloseBtn.Size = isMobile and UDim2.new(0, 28, 0, 28) or UDim2.new(0, 32, 0, 32)
+    CloseBtn.Position = isMobile and UDim2.new(1, -32, 0, 6) or UDim2.new(1, -35, 0, 6.5)
     CloseBtn.BackgroundColor3 = Color3.fromRGB(255, 80, 80)
     CloseBtn.Text = "×"
     CloseBtn.Font = Enum.Font.GothamBold
-    CloseBtn.TextSize = 22
+    CloseBtn.TextSize = isMobile and 18 or 20
     CloseBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
     CloseBtn.BorderSizePixel = 0
     CloseBtn.AutoButtonColor = false
     
     local CloseBtnCorner = Instance.new("UICorner", CloseBtn)
-    CloseBtnCorner.CornerRadius = UDim.new(0, 8)
+    CloseBtnCorner.CornerRadius = UDim.new(0, 6)
     
     local CloseBtnGradient = Instance.new("UIGradient", CloseBtn)
     CloseBtnGradient.Color = ColorSequence.new({
@@ -419,13 +428,13 @@ function Library:CreateWindow(config)
     -- Main Resize Handle
     local MainResize = Instance.new("TextButton", MainBlur)
     MainResize.Name = "ResizeHandle"
-    MainResize.Size = UDim2.new(0, 30, 0, 30)
-    MainResize.Position = UDim2.new(1, -30, 1, -30)
+    MainResize.Size = isMobile and UDim2.new(0, 25, 0, 25) or UDim2.new(0, 28, 0, 28)
+    MainResize.Position = isMobile and UDim2.new(1, -25, 1, -25) or UDim2.new(1, -28, 1, -28)
     MainResize.BackgroundColor3 = Color3.fromRGB(80, 140, 255)
     MainResize.Text = "⇲"
     MainResize.TextColor3 = Color3.fromRGB(255, 255, 255)
     MainResize.Font = Enum.Font.GothamBold
-    MainResize.TextSize = 16
+    MainResize.TextSize = isMobile and 13 or 15
     MainResize.BorderSizePixel = 0
     MainResize.ZIndex = 1000
     
@@ -442,18 +451,18 @@ function Library:CreateWindow(config)
     -- Tab Container
     local TabContainer = Instance.new("Frame", MainBlur)
     TabContainer.Name = "TabContainer"
-    TabContainer.Size = UDim2.new(0, 150, 1, -60)
-    TabContainer.Position = UDim2.new(0, 8, 0, 58)
+    TabContainer.Size = isMobile and UDim2.new(0, 90, 1, -48) or UDim2.new(0, 120, 1, -53)
+    TabContainer.Position = isMobile and UDim2.new(0, 5, 0, 46) or UDim2.new(0, 6, 0, 51)
     TabContainer.BackgroundTransparency = 1
     
     local TabLayout = Instance.new("UIListLayout", TabContainer)
-    TabLayout.Padding = UDim.new(0, 8)
+    TabLayout.Padding = isMobile and UDim.new(0, 5) or UDim.new(0, 6)
     
     -- Page Container
     local PageContainer = Instance.new("Frame", MainBlur)
     PageContainer.Name = "PageContainer"
-    PageContainer.Size = UDim2.new(1, -166, 1, -65)
-    PageContainer.Position = UDim2.new(0, 158, 0, 58)
+    PageContainer.Size = isMobile and UDim2.new(1, -102, 1, -53) or UDim2.new(1, -133, 1, -58)
+    PageContainer.Position = isMobile and UDim2.new(0, 97, 0, 46) or UDim2.new(0, 128, 0, 51)
     PageContainer.BackgroundTransparency = 1
     
     -- ===================================
@@ -483,8 +492,8 @@ function Library:CreateWindow(config)
             MainBlur.Size = UDim2.new(0, 0, 0, 0)
             MainBlur.Position = UDim2.new(0.5, 0, 0.5, 0)
             Tween(MainBlur, {
-                Size = UDim2.new(0, 600, 0, 500),
-                Position = UDim2.new(0.5, -300, 0.5, -250)
+                Size = UDim2.new(0, guiWidth, 0, guiHeight),
+                Position = UDim2.new(0.5, -guiWidth/2, 0.5, -guiHeight/2)
             }, 0.5, Enum.EasingStyle.Back)
         end
     end)
@@ -507,20 +516,22 @@ function Library:CreateWindow(config)
         GUI:Destroy()
     end)
     
-    -- Button Hover Effects
-    MinBtn.MouseEnter:Connect(function()
-        Tween(MinBtn, {Size = UDim2.new(0, 40, 0, 40)}, 0.2, Enum.EasingStyle.Bounce)
-    end)
-    MinBtn.MouseLeave:Connect(function()
-        Tween(MinBtn, {Size = UDim2.new(0, 36, 0, 36)}, 0.2)
-    end)
-    
-    CloseBtn.MouseEnter:Connect(function()
-        Tween(CloseBtn, {Size = UDim2.new(0, 40, 0, 40)}, 0.2, Enum.EasingStyle.Bounce)
-    end)
-    CloseBtn.MouseLeave:Connect(function()
-        Tween(CloseBtn, {Size = UDim2.new(0, 36, 0, 36)}, 0.2)
-    end)
+    -- Button Hover Effects (Only for PC)
+    if not isMobile then
+        MinBtn.MouseEnter:Connect(function()
+            Tween(MinBtn, {Size = UDim2.new(0, 36, 0, 36)}, 0.2, Enum.EasingStyle.Bounce)
+        end)
+        MinBtn.MouseLeave:Connect(function()
+            Tween(MinBtn, {Size = UDim2.new(0, 32, 0, 32)}, 0.2)
+        end)
+        
+        CloseBtn.MouseEnter:Connect(function()
+            Tween(CloseBtn, {Size = UDim2.new(0, 36, 0, 36)}, 0.2, Enum.EasingStyle.Bounce)
+        end)
+        CloseBtn.MouseLeave:Connect(function()
+            Tween(CloseBtn, {Size = UDim2.new(0, 32, 0, 32)}, 0.2)
+        end)
+    end
     
     -- Main Dragging
     local dragging = false
@@ -569,16 +580,16 @@ function Library:CreateWindow(config)
             local delta = mouse - resizeStart
             local newSize = startSize + UDim2.new(0, delta.X, 0, delta.Y)
             
-            local minWidth = 450
-            local maxWidth = 1200
-            local minHeight = 350
-            local maxHeight = 800
+            local minWidth = isMobile and 320 or 400
+            local maxWidth = isMobile and 450 or 800
+            local minHeight = isMobile and 350 or 380
+            local maxHeight = isMobile and 550 or 650
             
             local width = math.clamp(newSize.X.Offset, minWidth, maxWidth)
             local height = math.clamp(newSize.Y.Offset, minHeight, maxHeight)
             
             MainBlur.Size = UDim2.new(0, width, 0, height)
-            PageContainer.Size = UDim2.new(1, -166, 1, -65)
+            PageContainer.Size = isMobile and UDim2.new(1, -102, 1, -53) or UDim2.new(1, -133, 1, -58)
         end
     end)
     
@@ -593,7 +604,7 @@ function Library:CreateWindow(config)
         -- Tab Button with Beautiful Design
         local TabBtn = Instance.new("TextButton", TabContainer)
         TabBtn.Name = name
-        TabBtn.Size = UDim2.new(1, -10, 0, 40)
+        TabBtn.Size = isMobile and UDim2.new(1, -6, 0, 32) or UDim2.new(1, -8, 0, 36)
         TabBtn.BackgroundColor3 = Color3.fromRGB(30, 30, 45)
         TabBtn.Text = ""
         TabBtn.BorderSizePixel = 0
@@ -611,14 +622,15 @@ function Library:CreateWindow(config)
         
         -- Tab Label
         local TabLabel = Instance.new("TextLabel", TabBtn)
-        TabLabel.Size = UDim2.new(1, -20, 1, 0)
-        TabLabel.Position = UDim2.new(0, 10, 0, 0)
+        TabLabel.Size = UDim2.new(1, -16, 1, 0)
+        TabLabel.Position = UDim2.new(0, 8, 0, 0)
         TabLabel.BackgroundTransparency = 1
         TabLabel.Text = name
         TabLabel.Font = Enum.Font.GothamBold
-        TabLabel.TextSize = 14
+        TabLabel.TextSize = isMobile and 11 or 13
         TabLabel.TextColor3 = Color3.fromRGB(180, 180, 200)
         TabLabel.TextXAlignment = Enum.TextXAlignment.Left
+        TabLabel.TextScaled = isMobile
         
         -- Tab Indicator
         local TabIndicator = Instance.new("Frame", TabBtn)
@@ -637,17 +649,17 @@ function Library:CreateWindow(config)
         Page.Size = UDim2.new(1, -5, 1, 0)
         Page.BackgroundTransparency = 1
         Page.BorderSizePixel = 0
-        Page.ScrollBarThickness = 6
+        Page.ScrollBarThickness = isMobile and 4 or 5
         Page.ScrollBarImageColor3 = Color3.fromRGB(80, 140, 255)
         Page.ScrollBarImageTransparency = 0.5
         Page.CanvasSize = UDim2.new(0, 0, 0, 0)
         Page.Visible = false
         
         local PageLayout = Instance.new("UIListLayout", Page)
-        PageLayout.Padding = UDim.new(0, 10)
+        PageLayout.Padding = isMobile and UDim.new(0, 6) or UDim.new(0, 8)
         
         PageLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
-            Page.CanvasSize = UDim2.new(0, 0, 0, PageLayout.AbsoluteContentSize.Y + 15)
+            Page.CanvasSize = UDim2.new(0, 0, 0, PageLayout.AbsoluteContentSize.Y + 10)
         end)
         
         -- Tab Click
@@ -665,17 +677,20 @@ function Library:CreateWindow(config)
             Tween(TabLabel, {TextColor3 = Color3.fromRGB(255, 255, 255)})
         end)
         
-        TabBtn.MouseEnter:Connect(function()
-            if not Page.Visible then
-                Tween(TabBtn, {BackgroundColor3 = Color3.fromRGB(40, 40, 55)})
-            end
-        end)
-        
-        TabBtn.MouseLeave:Connect(function()
-            if not Page.Visible then
-                Tween(TabBtn, {BackgroundColor3 = Color3.fromRGB(30, 30, 45)})
-            end
-        end)
+        -- Hover Effects (Only for PC)
+        if not isMobile then
+            TabBtn.MouseEnter:Connect(function()
+                if not Page.Visible then
+                    Tween(TabBtn, {BackgroundColor3 = Color3.fromRGB(40, 40, 55)})
+                end
+            end)
+            
+            TabBtn.MouseLeave:Connect(function()
+                if not Page.Visible then
+                    Tween(TabBtn, {BackgroundColor3 = Color3.fromRGB(30, 30, 45)})
+                end
+            end)
+        end
         
         Tab.Button = TabBtn
         Tab.Label = TabLabel
@@ -825,7 +840,7 @@ function Library:CreateWindow(config)
             ToggleCircle.Position = default and UDim2.new(1, -23, 0.5, -10) or UDim2.new(0, 3, 0.5, -10)
             ToggleCircle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
             ToggleCircle.BorderSizePixel = 0
-            
+
             local ToggleCircleCorner = Instance.new("UICorner", ToggleCircle)
             ToggleCircleCorner.CornerRadius = UDim.new(0, 10)
             
@@ -1106,3 +1121,4 @@ function Library:CreateWindow(config)
 end
 
 return Library
+            
