@@ -1,4 +1,493 @@
--- XZ1Hub Library - Ultra Beautiful Edition
+-- Tab Page
+        local Page = Instance.new("ScrollingFrame", PageContainer)
+        Page.Name = name .. "Page"
+        Page.Size = UDim2.new(1, -5, 1, 0)
+        Page.BackgroundTransparency = 1
+        Page.BorderSizePixel = 0
+        Page.ScrollBarThickness = isMobile and 4 or 5
+        Page.ScrollBarImageColor3 = Color3.fromRGB(80, 140, 255)
+        Page.ScrollBarImageTransparency = 0.5
+        Page.CanvasSize = UDim2.new(0, 0, 0, 0)
+        Page.Visible = false
+        
+        local PageLayout = Instance.new("UIListLayout", Page)
+        PageLayout.Padding = isMobile and UDim.new(0, 6) or UDim.new(0, 8)
+        
+        PageLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+            Page.CanvasSize = UDim2.new(0, 0, 0, PageLayout.AbsoluteContentSize.Y + 10)
+        end)
+        
+        -- Tab Click
+        TabBtn.MouseButton1Click:Connect(function()
+            for _, tab in pairs(Window.Tabs) do
+                tab.Page.Visible = false
+                tab.Indicator.Visible = false
+                Tween(tab.Button, {BackgroundColor3 = Color3.fromRGB(30, 30, 45)})
+                Tween(tab.Label, {TextColor3 = Color3.fromRGB(180, 180, 200)})
+            end
+            
+            Page.Visible = true
+            TabIndicator.Visible = true
+            Tween(TabBtn, {BackgroundColor3 = Color3.fromRGB(40, 40, 60)})
+            Tween(TabLabel, {TextColor3 = Color3.fromRGB(255, 255, 255)})
+        end)
+        
+        -- Hover Effects (Only for PC)
+        if not isMobile then
+            TabBtn.MouseEnter:Connect(function()
+                if not Page.Visible then
+                    Tween(TabBtn, {BackgroundColor3 = Color3.fromRGB(40, 40, 55)})
+                end
+            end)
+            
+            TabBtn.MouseLeave:Connect(function()
+                if not Page.Visible then
+                    Tween(TabBtn, {BackgroundColor3 = Color3.fromRGB(30, 30, 45)})
+                end
+            end)
+        end
+        
+        Tab.Button = TabBtn
+        Tab.Label = TabLabel
+        Tab.Indicator = TabIndicator
+        Tab.Page = Page
+        table.insert(Window.Tabs, Tab)
+        
+        if #Window.Tabs == 1 then
+            Page.Visible = true
+            TabIndicator.Visible = true
+            TabBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 60)
+            TabLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+        end
+        
+        -- Section
+        function Tab:CreateSection(text)
+            local Section = Instance.new("Frame", Page)
+            Section.Size = isMobile and UDim2.new(1, -8, 0, 32) or UDim2.new(1, -10, 0, 35)
+            Section.BackgroundColor3 = Color3.fromRGB(35, 35, 50)
+            Section.BorderSizePixel = 0
+            
+            local SectionCorner = Instance.new("UICorner", Section)
+            SectionCorner.CornerRadius = UDim.new(0, 8)
+            
+            local SectionGradient = Instance.new("UIGradient", Section)
+            SectionGradient.Color = ColorSequence.new({
+                ColorSequenceKeypoint.new(0, Color3.fromRGB(40, 40, 60)),
+                ColorSequenceKeypoint.new(1, Color3.fromRGB(35, 35, 50))
+            })
+            SectionGradient.Rotation = 45
+            
+            local SectionStroke = Instance.new("UIStroke", Section)
+            SectionStroke.Color = Color3.fromRGB(60, 60, 90)
+            SectionStroke.Thickness = 1
+            SectionStroke.Transparency = 0.5
+            
+            local SectionLabel = Instance.new("TextLabel", Section)
+            SectionLabel.Size = UDim2.new(1, -24, 1, 0)
+            SectionLabel.Position = UDim2.new(0, 12, 0, 0)
+            SectionLabel.BackgroundTransparency = 1
+            SectionLabel.Text = text
+            SectionLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+            SectionLabel.Font = Enum.Font.GothamBold
+            SectionLabel.TextSize = isMobile and 12 or 14
+            SectionLabel.TextXAlignment = Enum.TextXAlignment.Left
+            SectionLabel.TextScaled = isMobile
+            
+            local SectionGlow = Instance.new("Frame", Section)
+            SectionGlow.Size = UDim2.new(0, 3, 0.6, 0)
+            SectionGlow.Position = UDim2.new(0, 0, 0.2, 0)
+            SectionGlow.BackgroundColor3 = Color3.fromRGB(80, 140, 255)
+            SectionGlow.BorderSizePixel = 0
+            Instance.new("UICorner", SectionGlow).CornerRadius = UDim.new(0, 2)
+        end
+        
+        -- Button
+        function Tab:CreateButton(text, callback)
+            local BtnFrame = Instance.new("Frame", Page)
+            BtnFrame.Size = isMobile and UDim2.new(1, -8, 0, 36) or UDim2.new(1, -10, 0, 40)
+            BtnFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 50)
+            BtnFrame.BorderSizePixel = 0
+            
+            local BtnFrameCorner = Instance.new("UICorner", BtnFrame)
+            BtnFrameCorner.CornerRadius = UDim.new(0, 8)
+            
+            local Btn = Instance.new("TextButton", BtnFrame)
+            Btn.Size = UDim2.new(1, -10, 1, -10)
+            Btn.Position = UDim2.new(0, 5, 0, 5)
+            Btn.BackgroundColor3 = Color3.fromRGB(70, 130, 255)
+            Btn.Text = text
+            Btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+            Btn.Font = Enum.Font.GothamBold
+            Btn.TextSize = isMobile and 12 or 13
+            Btn.BorderSizePixel = 0
+            Btn.AutoButtonColor = false
+            Btn.TextScaled = isMobile
+            
+            local BtnCorner = Instance.new("UICorner", Btn)
+            BtnCorner.CornerRadius = UDim.new(0, 6)
+            
+            local BtnGradient = Instance.new("UIGradient", Btn)
+            BtnGradient.Color = ColorSequence.new({
+                ColorSequenceKeypoint.new(0, Color3.fromRGB(80, 140, 255)),
+                ColorSequenceKeypoint.new(1, Color3.fromRGB(120, 80, 255))
+            })
+            BtnGradient.Rotation = 45
+            
+            if not isMobile then
+                Btn.MouseEnter:Connect(function()
+                    Tween(Btn, {Size = UDim2.new(1, -8, 1, -8)}, 0.2, Enum.EasingStyle.Back)
+                end)
+                
+                Btn.MouseLeave:Connect(function()
+                    Tween(Btn, {Size = UDim2.new(1, -10, 1, -10)}, 0.2)
+                end)
+            end
+            
+            Btn.MouseButton1Click:Connect(function()
+                Tween(Btn, {Size = UDim2.new(1, -14, 1, -14)}, 0.1)
+                wait(0.1)
+                Tween(Btn, {Size = UDim2.new(1, -10, 1, -10)}, 0.2, Enum.EasingStyle.Bounce)
+                pcall(callback)
+            end)
+        end
+        
+        -- Toggle
+        function Tab:CreateToggle(text, default, callback)
+            local ToggleFrame = Instance.new("Frame", Page)
+            ToggleFrame.Size = isMobile and UDim2.new(1, -8, 0, 36) or UDim2.new(1, -10, 0, 40)
+            ToggleFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 50)
+            ToggleFrame.BorderSizePixel = 0
+            
+            local ToggleFrameCorner = Instance.new("UICorner", ToggleFrame)
+            ToggleFrameCorner.CornerRadius = UDim.new(0, 8)
+            
+            local ToggleGradient = Instance.new("UIGradient", ToggleFrame)
+            ToggleGradient.Color = ColorSequence.new({
+                ColorSequenceKeypoint.new(0, Color3.fromRGB(38, 38, 55)),
+                ColorSequenceKeypoint.new(1, Color3.fromRGB(35, 35, 50))
+            })
+            ToggleGradient.Rotation = 90
+            
+            local Label = Instance.new("TextLabel", ToggleFrame)
+            Label.Size = isMobile and UDim2.new(0.6, 0, 1, 0) or UDim2.new(0.65, 0, 1, 0)
+            Label.Position = UDim2.new(0, 10, 0, 0)
+            Label.BackgroundTransparency = 1
+            Label.Text = text
+            Label.TextColor3 = Color3.fromRGB(255, 255, 255)
+            Label.Font = Enum.Font.GothamSemibold
+            Label.TextSize = isMobile and 11 or 12
+            Label.TextXAlignment = Enum.TextXAlignment.Left
+            Label.TextScaled = isMobile
+            
+            local ToggleBg = Instance.new("Frame", ToggleFrame)
+            ToggleBg.Size = isMobile and UDim2.new(0, 44, 0, 22) or UDim2.new(0, 50, 0, 24)
+            ToggleBg.Position = isMobile and UDim2.new(1, -48, 0.5, -11) or UDim2.new(1, -55, 0.5, -12)
+            ToggleBg.BackgroundColor3 = default and Color3.fromRGB(70, 130, 255) or Color3.fromRGB(50, 50, 70)
+            ToggleBg.BorderSizePixel = 0
+            
+            local ToggleBgCorner = Instance.new("UICorner", ToggleBg)
+            ToggleBgCorner.CornerRadius = UDim.new(0, 11)
+            
+            local ToggleBgGradient = Instance.new("UIGradient", ToggleBg)
+            ToggleBgGradient.Color = default and ColorSequence.new({
+                ColorSequenceKeypoint.new(0, Color3.fromRGB(80, 140, 255)),
+                ColorSequenceKeypoint.new(1, Color3.fromRGB(120, 80, 255))
+            }) or ColorSequence.new(Color3.fromRGB(50, 50, 70))
+            ToggleBgGradient.Rotation = 45
+            
+            local circleSize = isMobile and 18 or 20
+            local ToggleCircle = Instance.new("Frame", ToggleBg)
+            ToggleCircle.Size = UDim2.new(0, circleSize, 0, circleSize)
+            ToggleCircle.Position = default and UDim2.new(1, -(circleSize + 2), 0.5, -circleSize/2) or UDim2.new(0, 2, 0.5, -circleSize/2)
+            ToggleCircle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+            ToggleCircle.BorderSizePixel = 0
+            
+            local ToggleCircleCorner = Instance.new("UICorner", ToggleCircle)
+            ToggleCircleCorner.CornerRadius = UDim.new(0, circleSize/2)
+            
+            local toggled = default or false
+            
+            local ToggleBtn = Instance.new("TextButton", ToggleBg)
+            ToggleBtn.Size = UDim2.new(1, 0, 1, 0)
+            ToggleBtn.BackgroundTransparency = 1
+            ToggleBtn.Text = ""
+            
+            ToggleBtn.MouseButton1Click:Connect(function()
+                toggled = not toggled
+                
+                if toggled then
+                    Tween(ToggleCircle, {Position = UDim2.new(1, -(circleSize + 2), 0.5, -circleSize/2)}, 0.25, Enum.EasingStyle.Back)
+                    Tween(ToggleBg, {BackgroundColor3 = Color3.fromRGB(70, 130, 255)})
+                    ToggleBgGradient.Color = ColorSequence.new({
+                        ColorSequenceKeypoint.new(0, Color3.fromRGB(80, 140, 255)),
+                        ColorSequenceKeypoint.new(1, Color3.fromRGB(120, 80, 255))
+                    })
+                else
+                    Tween(ToggleCircle, {Position = UDim2.new(0, 2, 0.5, -circleSize/2)}, 0.25, Enum.EasingStyle.Back)
+                    Tween(ToggleBg, {BackgroundColor3 = Color3.fromRGB(50, 50, 70)})
+                    ToggleBgGradient.Color = ColorSequence.new(Color3.fromRGB(50, 50, 70))
+                end
+                
+                pcall(callback, toggled)
+            end)
+        end
+        
+        -- Slider
+        function Tab:CreateSlider(text, min, max, default, callback)
+            local SliderFrame = Instance.new("Frame", Page)
+            SliderFrame.Size = isMobile and UDim2.new(1, -8, 0, 50) or UDim2.new(1, -10, 0, 55)
+            SliderFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 50)
+            SliderFrame.BorderSizePixel = 0
+            
+            local SliderFrameCorner = Instance.new("UICorner", SliderFrame)
+            SliderFrameCorner.CornerRadius = UDim.new(0, 8)
+            
+            local Label = Instance.new("TextLabel", SliderFrame)
+            Label.Size = UDim2.new(0.55, 0, 0, 18)
+            Label.Position = UDim2.new(0, 10, 0, 6)
+            Label.BackgroundTransparency = 1
+            Label.Text = text
+            Label.TextColor3 = Color3.fromRGB(255, 255, 255)
+            Label.Font = Enum.Font.GothamSemibold
+            Label.TextSize = isMobile and 11 or 12
+            Label.TextXAlignment = Enum.TextXAlignment.Left
+            Label.TextScaled = isMobile
+            
+            local ValueBox = Instance.new("Frame", SliderFrame)
+            ValueBox.Size = isMobile and UDim2.new(0, 55, 0, 20) or UDim2.new(0, 60, 0, 22)
+            ValueBox.Position = isMobile and UDim2.new(1, -60, 0, 5) or UDim2.new(1, -65, 0, 5)
+            ValueBox.BackgroundColor3 = Color3.fromRGB(45, 45, 65)
+            ValueBox.BorderSizePixel = 0
+            
+            local ValueBoxCorner = Instance.new("UICorner", ValueBox)
+            ValueBoxCorner.CornerRadius = UDim.new(0, 5)
+            
+            local ValueLabel = Instance.new("TextLabel", ValueBox)
+            ValueLabel.Size = UDim2.new(1, 0, 1, 0)
+            ValueLabel.BackgroundTransparency = 1
+            ValueLabel.Text = tostring(default)
+            ValueLabel.TextColor3 = Color3.fromRGB(100, 180, 255)
+            ValueLabel.Font = Enum.Font.GothamBold
+            ValueLabel.TextSize = isMobile and 11 or 13
+            
+            local SliderBg = Instance.new("Frame", SliderFrame)
+            SliderBg.Size = isMobile and UDim2.new(1, -20, 0, 6) or UDim2.new(1, -24, 0, 7)
+            SliderBg.Position = isMobile and UDim2.new(0, 10, 1, -14) or UDim2.new(0, 12, 1, -16)
+            SliderBg.BackgroundColor3 = Color3.fromRGB(45, 45, 65)
+            SliderBg.BorderSizePixel = 0
+            
+            local SliderBgCorner = Instance.new("UICorner", SliderBg)
+            SliderBgCorner.CornerRadius = UDim.new(0, 3)
+            
+            local SliderFill = Instance.new("Frame", SliderBg)
+            SliderFill.Size = UDim2.new((default - min) / (max - min), 0, 1, 0)
+            SliderFill.BackgroundColor3 = Color3.fromRGB(80, 140, 255)
+            SliderFill.BorderSizePixel = 0
+            
+            local SliderFillCorner = Instance.new("UICorner", SliderFill)
+            SliderFillCorner.CornerRadius = UDim.new(0, 3)
+            
+            local SliderFillGradient = Instance.new("UIGradient", SliderFill)
+            SliderFillGradient.Color = ColorSequence.new({
+                ColorSequenceKeypoint.new(0, Color3.fromRGB(80, 140, 255)),
+                ColorSequenceKeypoint.new(1, Color3.fromRGB(120, 80, 255))
+            })
+            
+            local dotSize = isMobile and 14 or 16
+            local SliderDot = Instance.new("Frame", SliderBg)
+            SliderDot.Size = UDim2.new(0, dotSize, 0, dotSize)
+            SliderDot.Position = UDim2.new((default - min) / (max - min), -dotSize/2, 0.5, -dotSize/2)
+            SliderDot.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+            SliderDot.BorderSizePixel = 0
+            
+            local SliderDotCorner = Instance.new("UICorner", SliderDot)
+            SliderDotCorner.CornerRadius = UDim.new(0, dotSize/2)
+            
+            local dragging = false
+            
+            SliderBg.InputBegan:Connect(function(input)
+                if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+                    dragging = true
+                    if not isMobile then
+                        Tween(SliderDot, {Size = UDim2.new(0, dotSize + 4, 0, dotSize + 4)}, 0.2)
+                    end
+                end
+            end)
+            
+            UserInputService.InputEnded:Connect(function(input)
+                if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+                    dragging = false
+                    if not isMobile then
+                        Tween(SliderDot, {Size = UDim2.new(0, dotSize, 0, dotSize)}, 0.2)
+                    end
+                end
+            end)
+            
+            UserInputService.InputChanged:Connect(function(input)
+                if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+                    local pos = math.clamp((input.Position.X - SliderBg.AbsolutePosition.X) / SliderBg.AbsoluteSize.X, 0, 1)
+                    local value = math.floor(min + (max - min) * pos)
+                    
+                    SliderFill.Size = UDim2.new(pos, 0, 1, 0)
+                    SliderDot.Position = UDim2.new(pos, -dotSize/2, 0.5, -dotSize/2)
+                    ValueLabel.Text = tostring(value)
+                    
+                    pcall(callback, value)
+                end
+            end)
+        end
+        
+        -- Dropdown
+        function Tab:CreateDropdown(text, options, default, callback)
+            local DropFrame = Instance.new("Frame", Page)
+            DropFrame.Size = isMobile and UDim2.new(1, -8, 0, 36) or UDim2.new(1, -10, 0, 40)
+            DropFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 50)
+            DropFrame.BorderSizePixel = 0
+            
+            local DropFrameCorner = Instance.new("UICorner", DropFrame)
+            DropFrameCorner.CornerRadius = UDim.new(0, 8)
+            
+            local Label = Instance.new("TextLabel", DropFrame)
+            Label.Size = isMobile and UDim2.new(0.3, 0, 1, 0) or UDim2.new(0.35, 0, 1, 0)
+            Label.Position = UDim2.new(0, 10, 0, 0)
+            Label.BackgroundTransparency = 1
+            Label.Text = text
+            Label.TextColor3 = Color3.fromRGB(255, 255, 255)
+            Label.Font = Enum.Font.GothamSemibold
+            Label.TextSize = isMobile and 10 or 12
+            Label.TextXAlignment = Enum.TextXAlignment.Left
+            Label.TextScaled = isMobile
+            
+            local DropBtn = Instance.new("TextButton", DropFrame)
+            DropBtn.Size = isMobile and UDim2.new(0.65, 0, 0, 26) or UDim2.new(0.6, 0, 0, 28)
+            DropBtn.Position = isMobile and UDim2.new(0.33, 0, 0.5, -13) or UDim2.new(0.38, 0, 0.5, -14)
+            DropBtn.BackgroundColor3 = Color3.fromRGB(45, 45, 65)
+            DropBtn.Text = default or options[1] or "Select"
+            DropBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+            DropBtn.Font = Enum.Font.Gotham
+            DropBtn.TextSize = isMobile and 10 or 11
+            DropBtn.BorderSizePixel = 0
+            DropBtn.AutoButtonColor = false
+            DropBtn.TextScaled = isMobile
+            
+            local DropBtnCorner = Instance.new("UICorner", DropBtn)
+            DropBtnCorner.CornerRadius = UDim.new(0, 6)
+            
+            local DropArrow = Instance.new("TextLabel", DropBtn)
+            DropArrow.Size = UDim2.new(0, 16, 1, 0)
+            DropArrow.Position = UDim2.new(1, -18, 0, 0)
+            DropArrow.BackgroundTransparency = 1
+            DropArrow.Text = "▼"
+            DropArrow.TextColor3 = Color3.fromRGB(100, 180, 255)
+            DropArrow.Font = Enum.Font.GothamBold
+            DropArrow.TextSize = isMobile and 8 or 9
+            
+            local DropList = Instance.new("Frame", DropFrame)
+            DropList.Size = isMobile and UDim2.new(0.65, 0, 0, 0) or UDim2.new(0.6, 0, 0, 0)
+            DropList.Position = isMobile and UDim2.new(0.33, 0, 1, 6) or UDim2.new(0.38, 0, 1, 7)
+            DropList.BackgroundColor3 = Color3.fromRGB(40, 40, 60)
+            DropList.BorderSizePixel = 0
+            DropList.Visible = false
+            DropList.ZIndex = 100
+            DropList.ClipsDescendants = true
+            
+            local DropListCorner = Instance.new("UICorner", DropList)
+            DropListCorner.CornerRadius = UDim.new(0, 6)
+            
+            local DropListStroke = Instance.new("UIStroke", DropList)
+            DropListStroke.Color = Color3.fromRGB(80, 140, 255)
+            DropListStroke.Thickness = 1.5
+            DropListStroke.Transparency = 0.5
+            
+            local DropLayout = Instance.new("UIListLayout", DropList)
+            
+            for _, option in pairs(options) do
+                local OptionBtn = Instance.new("TextButton", DropList)
+                OptionBtn.Size = isMobile and UDim2.new(1, 0, 0, 26) or UDim2.new(1, 0, 0, 28)
+                OptionBtn.BackgroundTransparency = 1
+                OptionBtn.Text = option
+                OptionBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+                OptionBtn.Font = Enum.Font.Gotham
+                OptionBtn.TextSize = isMobile and 10 or 11
+                OptionBtn.BorderSizePixel = 0
+                OptionBtn.AutoButtonColor = false
+                OptionBtn.ZIndex = 101
+                OptionBtn.TextScaled = isMobile
+                
+                if not isMobile then
+                    OptionBtn.MouseEnter:Connect(function()
+                        OptionBtn.BackgroundTransparency = 0
+                        OptionBtn.BackgroundColor3 = Color3.fromRGB(60, 60, 90)
+                    end)
+                    
+                    OptionBtn.MouseLeave:Connect(function()
+                        OptionBtn.BackgroundTransparency = 1
+                    end)
+                end
+                
+                OptionBtn.MouseButton1Click:Connect(function()
+                    DropBtn.Text = option
+                    Tween(DropArrow, {Rotation = 0}, 0.2)
+                    local dropSize = isMobile and 0.65 or 0.6
+                    Tween(DropList, {Size = UDim2.new(dropSize, 0, 0, 0)}, 0.2)
+                    wait(0.2)
+                    DropList.Visible = false
+                    pcall(callback, option)
+                end)
+            end
+            
+            DropBtn.MouseButton1Click:Connect(function()
+                DropList.Visible = not DropList.Visible
+                local dropSize = isMobile and 0.65 or 0.6
+                local optionHeight = isMobile and 26 or 28
+                if DropList.Visible then
+                    Tween(DropArrow, {Rotation = 180}, 0.2)
+                    Tween(DropList, {Size = UDim2.new(dropSize, 0, 0, math.min(#options * optionHeight, 100))}, 0.3, Enum.EasingStyle.Back)
+                else
+                    Tween(DropArrow, {Rotation = 0}, 0.2)
+                    Tween(DropList, {Size = UDim2.new(dropSize, 0, 0, 0)}, 0.2)
+                    wait(0.2)
+                    DropList.Visible = false
+                end
+            end)
+        end
+        
+        -- Label
+        function Tab:CreateLabel(text)
+            local LabelFrame = Instance.new("Frame", Page)
+            LabelFrame.Size = isMobile and UDim2.new(1, -8, 0, 30) or UDim2.new(1, -10, 0, 32)
+            LabelFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 50)
+            LabelFrame.BackgroundTransparency = 0.5
+            LabelFrame.BorderSizePixel = 0
+            
+            local LabelCorner = Instance.new("UICorner", LabelFrame)
+            LabelCorner.CornerRadius = UDim.new(0, 8)
+            
+            local Label = Instance.new("TextLabel", LabelFrame)
+            Label.Size = UDim2.new(1, -20, 1, 0)
+            Label.Position = UDim2.new(0, 10, 0, 0)
+            Label.BackgroundTransparency = 1
+            Label.Text = text
+            Label.TextColor3 = Color3.fromRGB(200, 200, 220)
+            Label.Font = Enum.Font.Gotham
+            Label.TextSize = isMobile and 11 or 12
+            Label.TextXAlignment = Enum.TextXAlignment.Left
+            Label.TextScaled = isMobile
+            
+            return {
+                SetText = function(self, newText)
+                    Label.Text = newText
+                end
+            }
+        end
+        
+        return Tab
+    end
+    
+    return Window
+end
+
+return Library-- XZ1Hub Library - Ultra Beautiful Edition
 -- Version: 3.0 Premium - Maximum Beauty
 -- Made by XZ1Hub Team
 
@@ -504,7 +993,7 @@ function Library:CreateWindow(config)
             }, 0.5, Enum.EasingStyle.Back)
         end
     end)
-
+    
     MinBtn.MouseButton1Click:Connect(function()
         Tween(MainBlur, {
             Size = UDim2.new(0, 0, 0, 0),
@@ -540,35 +1029,28 @@ function Library:CreateWindow(config)
         end)
     end
     
-    -- Main Dragging (Fixed for Mobile & PC)
+    -- Main Dragging
     local dragging = false
     local dragStart, startPos
     
     TopBar.InputBegan:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
             dragging = true
             dragStart = input.Position
             startPos = MainBlur.Position
-            
-            input.Changed:Connect(function()
-                if input.UserInputState == Enum.UserInputState.End then
-                    dragging = false
-                end
-            end)
         end
     end)
     
-    TopBar.InputChanged:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
-            if dragging then
-                local delta = input.Position - dragStart
-                MainBlur.Position = UDim2.new(
-                    startPos.X.Scale, 
-                    startPos.X.Offset + delta.X, 
-                    startPos.Y.Scale, 
-                    startPos.Y.Offset + delta.Y
-                )
-            end
+    UserInputService.InputChanged:Connect(function(input)
+        if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
+            local delta = input.Position - dragStart
+            MainBlur.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+        end
+    end)
+    
+    UserInputService.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            dragging = false
         end
     end)
     
@@ -635,6 +1117,18 @@ function Library:CreateWindow(config)
         TabBtnGradient.Rotation = 45
         
         -- Tab Label
+        local TabLabel = Instance.new("TextLabel", TabBtn)
+        TabLabel.Size = UDim2.new(1, -16, 1, 0)
+        TabLabel.Position = UDim2.new(0, 8, 0, 0)
+        TabLabel.BackgroundTransparency = 1
+        TabLabel.Text = name
+        TabLabel.Font = Enum.Font.GothamBold
+        TabLabel.TextSize = isMobile and 11 or 13
+        TabLabel.TextColor3 = Color3.fromRGB(180, 180, 200)
+        TabLabel.TextXAlignment = Enum.TextXAlignment.Left
+        TabLabel.TextScaled = isMobile
+        
+        -- Tab Indicator
         local TabIndicator = Instance.new("Frame", TabBtn)
         TabIndicator.Size = UDim2.new(0, 4, 0.7, 0)
         TabIndicator.Position = UDim2.new(0, 0, 0.15, 0)
@@ -649,492 +1143,6 @@ function Library:CreateWindow(config)
         local Page = Instance.new("ScrollingFrame", PageContainer)
         Page.Name = name .. "Page"
         Page.Size = UDim2.new(1, -5, 1, 0)
-        Page.BackgroundTransparency = 1
-        Page.BorderSizePixel = 0
-        Page.ScrollBarThickness = isMobile and 4 or 5
-        Page.ScrollBarImageColor3 = Color3.fromRGB(80, 140, 255)
-        Page.ScrollBarImageTransparency = 0.5
-        Page.CanvasSize = UDim2.new(0, 0, 0, 0)
-        Page.Visible = false
-        
-        local PageLayout = Instance.new("UIListLayout", Page)
-        PageLayout.Padding = isMobile and UDim.new(0, 6) or UDim.new(0, 8)
-        
-        PageLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
-            Page.CanvasSize = UDim2.new(0, 0, 0, PageLayout.AbsoluteContentSize.Y + 10)
-        end)
-        
-        -- Tab Click
-        TabBtn.MouseButton1Click:Connect(function()
-            for _, tab in pairs(Window.Tabs) do
-                tab.Page.Visible = false
-                tab.Indicator.Visible = false
-                Tween(tab.Button, {BackgroundColor3 = Color3.fromRGB(30, 30, 45)})
-                Tween(tab.Label, {TextColor3 = Color3.fromRGB(180, 180, 200)})
-            end
-            
-            Page.Visible = true
-            TabIndicator.Visible = true
-            Tween(TabBtn, {BackgroundColor3 = Color3.fromRGB(40, 40, 60)})
-            Tween(TabLabel, {TextColor3 = Color3.fromRGB(255, 255, 255)})
-        end)
-        
-        -- Hover Effects (Only for PC)
-        if not isMobile then
-            TabBtn.MouseEnter:Connect(function()
-                if not Page.Visible then
-                    Tween(TabBtn, {BackgroundColor3 = Color3.fromRGB(40, 40, 55)})
-                end
-            end)
-            
-            TabBtn.MouseLeave:Connect(function()
-                if not Page.Visible then
-                    Tween(TabBtn, {BackgroundColor3 = Color3.fromRGB(30, 30, 45)})
-                end
-            end)
-        end
-        
-        Tab.Button = TabBtn
-        Tab.Label = TabLabel
-        Tab.Indicator = TabIndicator
-        Tab.Page = Page
-        table.insert(Window.Tabs, Tab)
-        
-        if #Window.Tabs == 1 then
-            Page.Visible = true
-            TabIndicator.Visible = true
-            TabBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 60)
-            TabLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-        end
-        
-        -- Section
-        function Tab:CreateSection(text)
-            local Section = Instance.new("Frame", Page)
-            Section.Size = isMobile and UDim2.new(1, -8, 0, 32) or UDim2.new(1, -10, 0, 35)
-            Section.BackgroundColor3 = Color3.fromRGB(35, 35, 50)
-            Section.BorderSizePixel = 0
-            
-            local SectionCorner = Instance.new("UICorner", Section)
-            SectionCorner.CornerRadius = UDim.new(0, 8)
-            
-            local SectionGradient = Instance.new("UIGradient", Section)
-            SectionGradient.Color = ColorSequence.new({
-                ColorSequenceKeypoint.new(0, Color3.fromRGB(40, 40, 60)),
-                ColorSequenceKeypoint.new(1, Color3.fromRGB(35, 35, 50))
-            })
-            SectionGradient.Rotation = 45
-            
-            local SectionStroke = Instance.new("UIStroke", Section)
-            SectionStroke.Color = Color3.fromRGB(60, 60, 90)
-            SectionStroke.Thickness = 1
-            SectionStroke.Transparency = 0.5
-            
-            local SectionLabel = Instance.new("TextLabel", Section)
-            SectionLabel.Size = UDim2.new(1, -24, 1, 0)
-            SectionLabel.Position = UDim2.new(0, 12, 0, 0)
-            SectionLabel.BackgroundTransparency = 1
-            SectionLabel.Text = text
-            SectionLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-            SectionLabel.Font = Enum.Font.GothamBold
-            SectionLabel.TextSize = isMobile and 12 or 14
-            SectionLabel.TextXAlignment = Enum.TextXAlignment.Left
-            SectionLabel.TextScaled = isMobile
-            
-            local SectionGlow = Instance.new("Frame", Section)
-            SectionGlow.Size = UDim2.new(0, 3, 0.6, 0)
-            SectionGlow.Position = UDim2.new(0, 0, 0.2, 0)
-            SectionGlow.BackgroundColor3 = Color3.fromRGB(80, 140, 255)
-            SectionGlow.BorderSizePixel = 0
-            Instance.new("UICorner", SectionGlow).CornerRadius = UDim.new(0, 2)
-        end
-        
-        -- Button
-        function Tab:CreateButton(text, callback)
-            local BtnFrame = Instance.new("Frame", Page)
-            BtnFrame.Size = isMobile and UDim2.new(1, -8, 0, 36) or UDim2.new(1, -10, 0, 40)
-            BtnFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 50)
-            BtnFrame.BorderSizePixel = 0
-            
-            local BtnFrameCorner = Instance.new("UICorner", BtnFrame)
-            BtnFrameCorner.CornerRadius = UDim.new(0, 8)
-            
-            local Btn = Instance.new("TextButton", BtnFrame)
-            Btn.Size = UDim2.new(1, -10, 1, -10)
-            Btn.Position = UDim2.new(0, 5, 0, 5)
-            Btn.BackgroundColor3 = Color3.fromRGB(70, 130, 255)
-            Btn.Text = text
-            Btn.TextColor3 = Color3.fromRGB(255, 255, 255)
-            Btn.Font = Enum.Font.GothamBold
-            Btn.TextSize = isMobile and 12 or 13
-            Btn.BorderSizePixel = 0
-            Btn.AutoButtonColor = false
-            Btn.TextScaled = isMobile
-            
-            local BtnCorner = Instance.new("UICorner", Btn)
-            BtnCorner.CornerRadius = UDim.new(0, 6)
-            
-            local BtnGradient = Instance.new("UIGradient", Btn)
-            BtnGradient.Color = ColorSequence.new({
-                ColorSequenceKeypoint.new(0, Color3.fromRGB(80, 140, 255)),
-                ColorSequenceKeypoint.new(1, Color3.fromRGB(120, 80, 255))
-            })
-            BtnGradient.Rotation = 45
-            
-            if not isMobile then
-                Btn.MouseEnter:Connect(function()
-                    Tween(Btn, {Size = UDim2.new(1, -8, 1, -8)}, 0.2, Enum.EasingStyle.Back)
-                end)
-                
-                Btn.MouseLeave:Connect(function()
-                    Tween(Btn, {Size = UDim2.new(1, -10, 1, -10)}, 0.2)
-                end)
-            end
-            
-            Btn.MouseButton1Click:Connect(function()
-                Tween(Btn, {Size = UDim2.new(1, -14, 1, -14)}, 0.1)
-                wait(0.1)
-                Tween(Btn, {Size = UDim2.new(1, -10, 1, -10)}, 0.2, Enum.EasingStyle.Bounce)
-                pcall(callback)
-            end)
-        end
-        
-        -- Toggle
-        function Tab:CreateToggle(text, default, callback)
-            local ToggleFrame = Instance.new("Frame", Page)
-            ToggleFrame.Size = isMobile and UDim2.new(1, -8, 0, 36) or UDim2.new(1, -10, 0, 40)
-            ToggleFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 50)
-            ToggleFrame.BorderSizePixel = 0
-            
-            local ToggleFrameCorner = Instance.new("UICorner", ToggleFrame)
-            ToggleFrameCorner.CornerRadius = UDim.new(0, 8)
-            
-            local ToggleGradient = Instance.new("UIGradient", ToggleFrame)
-            ToggleGradient.Color = ColorSequence.new({
-                ColorSequenceKeypoint.new(0, Color3.fromRGB(38, 38, 55)),
-                ColorSequenceKeypoint.new(1, Color3.fromRGB(35, 35, 50))
-            })
-            ToggleGradient.Rotation = 90
-            
-            local Label = Instance.new("TextLabel", ToggleFrame)
-            Label.Size = isMobile and UDim2.new(0.6, 0, 1, 0) or UDim2.new(0.65, 0, 1, 0)
-            Label.Position = UDim2.new(0, 10, 0, 0)
-            Label.BackgroundTransparency = 1
-            Label.Text = text
-            Label.TextColor3 = Color3.fromRGB(255, 255, 255)
-            Label.Font = Enum.Font.GothamSemibold
-            Label.TextSize = isMobile and 11 or 12
-            Label.TextXAlignment = Enum.TextXAlignment.Left
-            Label.TextScaled = isMobile
-            
-            local ToggleBg = Instance.new("Frame", ToggleFrame)
-            ToggleBg.Size = isMobile and UDim2.new(0, 44, 0, 22) or UDim2.new(0, 50, 0, 24)
-            ToggleBg.Position = isMobile and UDim2.new(1, -48, 0.5, -11) or UDim2.new(1, -55, 0.5, -12)
-            ToggleBg.BackgroundColor3 = default and Color3.fromRGB(70, 130, 255) or Color3.fromRGB(50, 50, 70)
-            ToggleBg.BorderSizePixel = 0
-            
-            local ToggleBgCorner = Instance.new("UICorner", ToggleBg)
-            ToggleBgCorner.CornerRadius = UDim.new(0, 11)
-            
-            local ToggleBgGradient = Instance.new("UIGradient", ToggleBg)
-            ToggleBgGradient.Color = default and ColorSequence.new({
-                ColorSequenceKeypoint.new(0, Color3.fromRGB(80, 140, 255)),
-                ColorSequenceKeypoint.new(1, Color3.fromRGB(120, 80, 255))
-            }) or ColorSequence.new(Color3.fromRGB(50, 50, 70))
-            ToggleBgGradient.Rotation = 45
-            
-            local circleSize = isMobile and 18 or 20
-            local ToggleCircle = Instance.new("Frame", ToggleBg)
-            ToggleCircle.Size = UDim2.new(0, circleSize, 0, circleSize)
-            ToggleCircle.Position = default and UDim2.new(1, -(circleSize + 2), 0.5, -circleSize/2) or UDim2.new(0, 2, 0.5, -circleSize/2)
-            ToggleCircle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-            ToggleCircle.BorderSizePixel = 0
-            
-            local ToggleCircleCorner = Instance.new("UICorner", ToggleCircle)
-            ToggleCircleCorner.CornerRadius = UDim.new(0, circleSize/2)
-            
-            local toggled = default or false
-            
-            local ToggleBtn = Instance.new("TextButton", ToggleBg)
-            ToggleBtn.Size = UDim2.new(1, 0, 1, 0)
-            ToggleBtn.BackgroundTransparency = 1
-            ToggleBtn.Text = ""
-            
-            ToggleBtn.MouseButton1Click:Connect(function()
-                toggled = not toggled
-                
-                if toggled then
-                    Tween(ToggleCircle, {Position = UDim2.new(1, -(circleSize + 2), 0.5, -circleSize/2)}, 0.25, Enum.EasingStyle.Back)
-                    Tween(ToggleBg, {BackgroundColor3 = Color3.fromRGB(70, 130, 255)})
-                    ToggleBgGradient.Color = ColorSequence.new({
-                        ColorSequenceKeypoint.new(0, Color3.fromRGB(80, 140, 255)),
-                        ColorSequenceKeypoint.new(1, Color3.fromRGB(120, 80, 255))
-                    })
-                else
-                    Tween(ToggleCircle, {Position = UDim2.new(0, 2, 0.5, -circleSize/2)}, 0.25, Enum.EasingStyle.Back)
-                    Tween(ToggleBg, {BackgroundColor3 = Color3.fromRGB(50, 50, 70)})
-                    ToggleBgGradient.Color = ColorSequence.new(Color3.fromRGB(50, 50, 70))
-                end
-                
-                pcall(callback, toggled)
-            end)
-        end
-        
-        -- Slider
-        function Tab:CreateSlider(text, min, max, default, callback)
-            local SliderFrame = Instance.new("Frame", Page)
-            SliderFrame.Size = isMobile and UDim2.new(1, -8, 0, 50) or UDim2.new(1, -10, 0, 55)
-            SliderFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 50)
-            SliderFrame.BorderSizePixel = 0
-            
-            local SliderFrameCorner = Instance.new("UICorner", SliderFrame)
-            SliderFrameCorner.CornerRadius = UDim.new(0, 8)
-            
-            local Label = Instance.new("TextLabel", SliderFrame)
-            Label.Size = UDim2.new(0.55, 0, 0, 18)
-            Label.Position = UDim2.new(0, 10, 0, 6)
-            Label.BackgroundTransparency = 1
-            Label.Text = text
-            Label.TextColor3 = Color3.fromRGB(255, 255, 255)
-            Label.Font = Enum.Font.GothamSemibold
-            Label.TextSize = isMobile and 11 or 12
-            Label.TextXAlignment = Enum.TextXAlignment.Left
-            Label.TextScaled = isMobile
-            
-            local ValueBox = Instance.new("Frame", SliderFrame)
-            ValueBox.Size = isMobile and UDim2.new(0, 55, 0, 20) or UDim2.new(0, 60, 0, 22)
-            ValueBox.Position = isMobile and UDim2.new(1, -60, 0, 5) or UDim2.new(1, -65, 0, 5)
-            ValueBox.BackgroundColor3 = Color3.fromRGB(45, 45, 65)
-            ValueBox.BorderSizePixel = 0
-            
-            local ValueBoxCorner = Instance.new("UICorner", ValueBox)
-            ValueBoxCorner.CornerRadius = UDim.new(0, 5)
-            
-            local ValueLabel = Instance.new("TextLabel", ValueBox)
-            ValueLabel.Size = UDim2.new(1, 0, 1, 0)
-            ValueLabel.BackgroundTransparency = 1
-            ValueLabel.Text = tostring(default)
-            ValueLabel.TextColor3 = Color3.fromRGB(100, 180, 255)
-            ValueLabel.Font = Enum.Font.GothamBold
-            ValueLabel.TextSize = isMobile and 11 or 13
-            
-            local SliderBg = Instance.new("Frame", SliderFrame)
-            SliderBg.Size = isMobile and UDim2.new(1, -20, 0, 6) or UDim2.new(1, -24, 0, 7)
-            SliderBg.Position = isMobile and UDim2.new(0, 10, 1, -14) or UDim2.new(0, 12, 1, -16)
-            SliderBg.BackgroundColor3 = Color3.fromRGB(45, 45, 65)
-            SliderBg.BorderSizePixel = 0
-            
-            local SliderBgCorner = Instance.new("UICorner", SliderBg)
-            SliderBgCorner.CornerRadius = UDim.new(0, 3)
-            
-            local SliderFill = Instance.new("Frame", SliderBg)
-            SliderFill.Size = UDim2.new((default - min) / (max - min), 0, 1, 0)
-            SliderFill.BackgroundColor3 = Color3.fromRGB(80, 140, 255)
-            SliderFill.BorderSizePixel = 0
-            
-            local SliderFillCorner = Instance.new("UICorner", SliderFill)
-            SliderFillCorner.CornerRadius = UDim.new(0, 3)
-            
-            local SliderFillGradient = Instance.new("UIGradient", SliderFill)
-            SliderFillGradient.Color = ColorSequence.new({
-                ColorSequenceKeypoint.new(0, Color3.fromRGB(80, 140, 255)),
-                ColorSequenceKeypoint.new(1, Color3.fromRGB(120, 80, 255))
-            })
-            
-            local dotSize = isMobile and 14 or 16
-            local SliderDot = Instance.new("Frame", SliderBg)
-            SliderDot.Size = UDim2.new(0, dotSize, 0, dotSize)
-            SliderDot.Position = UDim2.new((default - min) / (max - min), -dotSize/2, 0.5, -dotSize/2)
-            SliderDot.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-            SliderDot.BorderSizePixel = 0
-            
-            local SliderDotCorner = Instance.new("UICorner", SliderDot)
-            SliderDotCorner.CornerRadius = UDim.new(0, dotSize/2)
-            
-            local dragging = false
-            
-            SliderBg.InputBegan:Connect(function(input)
-                if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-                    dragging = true
-                    if not isMobile then
-                        Tween(SliderDot, {Size = UDim2.new(0, dotSize + 4, 0, dotSize + 4)}, 0.2)
-                    end
-                end
-            end)
-            
-            UserInputService.InputEnded:Connect(function(input)
-                if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-                    dragging = false
-                    if not isMobile then
-                        Tween(SliderDot, {Size = UDim2.new(0, dotSize, 0, dotSize)}, 0.2)
-                    end
-                end
-            end)
-            
-            UserInputService.InputChanged:Connect(function(input)
-                if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
-                    local pos = math.clamp((input.Position.X - SliderBg.AbsolutePosition.X) / SliderBg.AbsoluteSize.X, 0, 1)
-                    local value = math.floor(min + (max - min) * pos)
-                    
-                    SliderFill.Size = UDim2.new(pos, 0, 1, 0)
-                    SliderDot.Position = UDim2.new(pos, -dotSize/2, 0.5, -dotSize/2)
-                    ValueLabel.Text = tostring(value)
-                    
-                    pcall(callback, value)
-                end
-            end)
-        end
-        
-        -- Dropdown
-        function Tab:CreateDropdown(text, options, default, callback)
-            local DropFrame = Instance.new("Frame", Page)
-            DropFrame.Size = isMobile and UDim2.new(1, -8, 0, 36) or UDim2.new(1, -10, 0, 40)
-            DropFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 50)
-            DropFrame.BorderSizePixel = 0
-            
-            local DropFrameCorner = Instance.new("UICorner", DropFrame)
-            DropFrameCorner.CornerRadius = UDim.new(0, 8)
-            
-            local Label = Instance.new("TextLabel", DropFrame)
-            Label.Size = isMobile and UDim2.new(0.3, 0, 1, 0) or UDim2.new(0.35, 0, 1, 0)
-            Label.Position = UDim2.new(0, 10, 0, 0)
-            Label.BackgroundTransparency = 1
-            Label.Text = text
-            Label.TextColor3 = Color3.fromRGB(255, 255, 255)
-            Label.Font = Enum.Font.GothamSemibold
-            Label.TextSize = isMobile and 10 or 12
-            Label.TextXAlignment = Enum.TextXAlignment.Left
-            Label.TextScaled = isMobile
-            
-            local DropBtn = Instance.new("TextButton", DropFrame)
-            DropBtn.Size = isMobile and UDim2.new(0.65, 0, 0, 26) or UDim2.new(0.6, 0, 0, 28)
-            DropBtn.Position = isMobile and UDim2.new(0.33, 0, 0.5, -13) or UDim2.new(0.38, 0, 0.5, -14)
-            DropBtn.BackgroundColor3 = Color3.fromRGB(45, 45, 65)
-            DropBtn.Text = default or options[1] or "Select"
-            DropBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-            DropBtn.Font = Enum.Font.Gotham
-            DropBtn.TextSize = isMobile and 10 or 11
-            DropBtn.BorderSizePixel = 0
-            DropBtn.AutoButtonColor = false
-            DropBtn.TextScaled = isMobile
-            
-            local DropBtnCorner = Instance.new("UICorner", DropBtn)
-            DropBtnCorner.CornerRadius = UDim.new(0, 6)
-            
-            local DropArrow = Instance.new("TextLabel", DropBtn)
-            DropArrow.Size = UDim2.new(0, 16, 1, 0)
-            DropArrow.Position = UDim2.new(1, -18, 0, 0)
-            DropArrow.BackgroundTransparency = 1
-            DropArrow.Text = "▼"
-            DropArrow.TextColor3 = Color3.fromRGB(100, 180, 255)
-            DropArrow.Font = Enum.Font.GothamBold
-            DropArrow.TextSize = isMobile and 8 or 9
-            
-            local DropList = Instance.new("Frame", DropFrame)
-            DropList.Size = isMobile and UDim2.new(0.65, 0, 0, 0) or UDim2.new(0.6, 0, 0, 0)
-            DropList.Position = isMobile and UDim2.new(0.33, 0, 1, 6) or UDim2.new(0.38, 0, 1, 7)
-            DropList.BackgroundColor3 = Color3.fromRGB(40, 40, 60)
-            DropList.BorderSizePixel = 0
-            DropList.Visible = false
-            DropList.ZIndex = 100
-            DropList.ClipsDescendants = true
-            
-            local DropListCorner = Instance.new("UICorner", DropList)
-            DropListCorner.CornerRadius = UDim.new(0, 6)
-            
-            local DropListStroke = Instance.new("UIStroke", DropList)
-            DropListStroke.Color = Color3.fromRGB(80, 140, 255)
-            DropListStroke.Thickness = 1.5
-            DropListStroke.Transparency = 0.5
-            
-            local DropLayout = Instance.new("UIListLayout", DropList)
-            
-            for _, option in pairs(options) do
-                local OptionBtn = Instance.new("TextButton", DropList)
-                OptionBtn.Size = isMobile and UDim2.new(1, 0, 0, 26) or UDim2.new(1, 0, 0, 28)
-                OptionBtn.BackgroundTransparency = 1
-                OptionBtn.Text = option
-                OptionBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-                OptionBtn.Font = Enum.Font.Gotham
-                OptionBtn.TextSize = isMobile and 10 or 11
-                OptionBtn.BorderSizePixel = 0
-                OptionBtn.AutoButtonColor = false
-                OptionBtn.ZIndex = 101
-                OptionBtn.TextScaled = isMobile
-                
-                if not isMobile then
-                    OptionBtn.MouseEnter:Connect(function()
-                        OptionBtn.BackgroundTransparency = 0
-                        OptionBtn.BackgroundColor3 = Color3.fromRGB(60, 60, 90)
-                    end)
-                    
-                    OptionBtn.MouseLeave:Connect(function()
-                        OptionBtn.BackgroundTransparency = 1
-                    end)
-                end
-                
-                OptionBtn.MouseButton1Click:Connect(function()
-                    DropBtn.Text = option
-                    Tween(DropArrow, {Rotation = 0}, 0.2)
-                    local dropSize = isMobile and 0.65 or 0.6
-                    Tween(DropList, {Size = UDim2.new(dropSize, 0, 0, 0)}, 0.2)
-                    wait(0.2)
-                    DropList.Visible = false
-                    pcall(callback, option)
-                end)
-            end
-            
-            DropBtn.MouseButton1Click:Connect(function()
-                DropList.Visible = not DropList.Visible
-                local dropSize = isMobile and 0.65 or 0.6
-                local optionHeight = isMobile and 26 or 28
-                if DropList.Visible then
-                    Tween(DropArrow, {Rotation = 180}, 0.2)
-                    Tween(DropList, {Size = UDim2.new(dropSize, 0, 0, math.min(#options * optionHeight, 100))}, 0.3, Enum.EasingStyle.Back)
-                else
-                    Tween(DropArrow, {Rotation = 0}, 0.2)
-                    Tween(DropList, {Size = UDim2.new(dropSize, 0, 0, 0)}, 0.2)
-                    wait(0.2)
-                    DropList.Visible = false
-                end
-            end)
-        end
-        
-        -- Label
-        function Tab:CreateLabel(text)
-            local LabelFrame = Instance.new("Frame", Page)
-            LabelFrame.Size = isMobile and UDim2.new(1, -8, 0, 30) or UDim2.new(1, -10, 0, 32)
-            LabelFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 50)
-            LabelFrame.BackgroundTransparency = 0.5
-            LabelFrame.BorderSizePixel = 0
-            
-            local LabelCorner = Instance.new("UICorner", LabelFrame)
-            LabelCorner.CornerRadius = UDim.new(0, 8)
-            
-            local Label = Instance.new("TextLabel", LabelFrame)
-            Label.Size = UDim2.new(1, -20, 1, 0)
-            Label.Position = UDim2.new(0, 10, 0, 0)
-            Label.BackgroundTransparency = 1
-            Label.Text = text
-            Label.TextColor3 = Color3.fromRGB(200, 200, 220)
-            Label.Font = Enum.Font.Gotham
-            Label.TextSize = isMobile and 11 or 12
-            Label.TextXAlignment = Enum.TextXAlignment.Left
-            Label.TextScaled = isMobile
-            
-            return {
-                SetText = function(self, newText)
-                    Label.Text = newText
-                end
-            }
-        end
-        
-        return Tab
-    end
-    
-    return Window
-end
-
-return Library(1, -5, 1, 0)
         Page.BackgroundTransparency = 1
         Page.BorderSizePixel = 0
         Page.ScrollBarThickness = 6
