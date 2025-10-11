@@ -57,8 +57,8 @@ function Library:CreateWindow(config)
     -- Floating Icon with Glow
     local IconContainer = Instance.new("Frame")
     IconContainer.Name = "IconContainer"
-    IconContainer.Size = isMobile and UDim2.new(0, 70, 0, 70) or UDim2.new(0, 80, 0, 80)
-    IconContainer.Position = UDim2.new(0, 20, 0, 20)
+    IconContainer.Size = isMobile and UDim2.new(0, 50, 0, 50) or UDim2.new(0, 55, 0, 55)
+    IconContainer.Position = UDim2.new(0, 15, 0, 15)
     IconContainer.BackgroundTransparency = 1
     IconContainer.Parent = GUI
     
