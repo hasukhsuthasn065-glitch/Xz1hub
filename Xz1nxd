@@ -57,8 +57,8 @@ function Library:CreateWindow(config)
     -- Floating Icon with Glow
     local IconContainer = Instance.new("Frame")
     IconContainer.Name = "IconContainer"
-    IconContainer.Size = isMobile and UDim2.new(0, 50, 0, 50) or UDim2.new(0, 55, 0, 55)
-    IconContainer.Position = UDim2.new(0, 15, 0, 15)
+    IconContainer.Size = isMobile and UDim2.new(0, 40, 0, 40) or UDim2.new(0, 45, 0, 45)
+    IconContainer.Position = UDim2.new(0, 10, 0, 10)
     IconContainer.BackgroundTransparency = 1
     IconContainer.Parent = GUI
     
@@ -153,8 +153,8 @@ function Library:CreateWindow(config)
     end)
     
     -- Main Window
-    local guiWidth = isMobile and 420 or 600
-    local guiHeight = isMobile and 480 or 550
+    local guiWidth = isMobile and 360 or 500
+    local guiHeight = isMobile and 400 or 470
     
     local MainFrame = Instance.new("Frame")
     MainFrame.Name = "MainFrame"
@@ -201,7 +201,7 @@ function Library:CreateWindow(config)
     
     -- Top Bar with Glass Effect
     local TopBar = Instance.new("Frame", MainFrame)
-    TopBar.Size = isMobile and UDim2.new(1, 0, 0, 50) or UDim2.new(1, 0, 0, 60)
+    TopBar.Size = isMobile and UDim2.new(1, 0, 0, 45) or UDim2.new(1, 0, 0, 50)
     TopBar.BackgroundColor3 = Color3.fromRGB(20, 20, 35)
     TopBar.BackgroundTransparency = 0.3
     TopBar.BorderSizePixel = 0
@@ -241,8 +241,8 @@ function Library:CreateWindow(config)
     
     -- Logo with Glow
     local LogoContainer = Instance.new("Frame", TopBar)
-    LogoContainer.Size = isMobile and UDim2.new(0, 40, 0, 40) or UDim2.new(0, 45, 0, 45)
-    LogoContainer.Position = isMobile and UDim2.new(0, 10, 0.5, -20) or UDim2.new(0, 12, 0.5, -22.5)
+    LogoContainer.Size = isMobile and UDim2.new(0, 32, 0, 32) or UDim2.new(0, 36, 0, 36)
+    LogoContainer.Position = isMobile and UDim2.new(0, 8, 0.5, -16) or UDim2.new(0, 10, 0.5, -18)
     LogoContainer.BackgroundTransparency = 1
     
     local LogoGlow = Instance.new("ImageLabel", LogoContainer)
@@ -261,12 +261,12 @@ function Library:CreateWindow(config)
     
     -- Title with Gradient
     local Title = Instance.new("TextLabel", TopBar)
-    Title.Size = isMobile and UDim2.new(0, 200, 1, 0) or UDim2.new(0, 280, 1, 0)
-    Title.Position = isMobile and UDim2.new(0, 58, 0, 0) or UDim2.new(0, 65, 0, 0)
+    Title.Size = isMobile and UDim2.new(0, 160, 1, 0) or UDim2.new(0, 220, 1, 0)
+    Title.Position = isMobile and UDim2.new(0, 46, 0, 0) or UDim2.new(0, 52, 0, 0)
     Title.BackgroundTransparency = 1
     Title.Text = config.Title or "XZ1Hub Premium"
     Title.Font = Enum.Font.GothamBold
-    Title.TextSize = isMobile and 16 or 20
+    Title.TextSize = isMobile and 14 or 17
     Title.TextColor3 = Color3.fromRGB(255, 255, 255)
     Title.TextXAlignment = Enum.TextXAlignment.Left
     
@@ -280,20 +280,20 @@ function Library:CreateWindow(config)
     
     -- Subtitle
     local Subtitle = Instance.new("TextLabel", TopBar)
-    Subtitle.Size = isMobile and UDim2.new(0, 200, 0, 14) or UDim2.new(0, 280, 0, 16)
-    Subtitle.Position = isMobile and UDim2.new(0, 58, 1, -18) or UDim2.new(0, 65, 1, -20)
+    Subtitle.Size = isMobile and UDim2.new(0, 160, 0, 12) or UDim2.new(0, 220, 0, 14)
+    Subtitle.Position = isMobile and UDim2.new(0, 46, 1, -16) or UDim2.new(0, 52, 1, -18)
     Subtitle.BackgroundTransparency = 1
     Subtitle.Text = "Premium Edition • v4.0"
     Subtitle.Font = Enum.Font.Gotham
-    Subtitle.TextSize = isMobile and 9 or 10
+    Subtitle.TextSize = isMobile and 8 or 9
     Subtitle.TextColor3 = Color3.fromRGB(150, 180, 255)
     Subtitle.TextXAlignment = Enum.TextXAlignment.Left
     Subtitle.TextTransparency = 0.3
     
     -- Minimize & Close Buttons Container
     local ButtonsContainer = Instance.new("Frame", TopBar)
-    ButtonsContainer.Size = isMobile and UDim2.new(0, 70, 0, 32) or UDim2.new(0, 80, 0, 36)
-    ButtonsContainer.Position = isMobile and UDim2.new(1, -75, 0.5, -16) or UDim2.new(1, -85, 0.5, -18)
+    ButtonsContainer.Size = isMobile and UDim2.new(0, 62, 0, 28) or UDim2.new(0, 68, 0, 32)
+    ButtonsContainer.Position = isMobile and UDim2.new(1, -66, 0.5, -14) or UDim2.new(1, -72, 0.5, -16)
     ButtonsContainer.BackgroundTransparency = 1
     
     local ButtonLayout = Instance.new("UIListLayout", ButtonsContainer)
@@ -303,11 +303,11 @@ function Library:CreateWindow(config)
     
     -- Minimize Button
     local MinimizeBtn = Instance.new("TextButton", ButtonsContainer)
-    MinimizeBtn.Size = isMobile and UDim2.new(0, 32, 0, 32) or UDim2.new(0, 36, 0, 36)
+    MinimizeBtn.Size = isMobile and UDim2.new(0, 28, 0, 28) or UDim2.new(0, 32, 0, 32)
     MinimizeBtn.BackgroundColor3 = Color3.fromRGB(80, 180, 255)
     MinimizeBtn.Text = "−"
     MinimizeBtn.Font = Enum.Font.GothamBold
-    MinimizeBtn.TextSize = isMobile and 20 or 24
+    MinimizeBtn.TextSize = isMobile and 18 or 20
     MinimizeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
     MinimizeBtn.BorderSizePixel = 0
     MinimizeBtn.BackgroundTransparency = 0.3
@@ -321,11 +321,11 @@ function Library:CreateWindow(config)
     
     -- Close Button
     local CloseBtn = Instance.new("TextButton", ButtonsContainer)
-    CloseBtn.Size = isMobile and UDim2.new(0, 32, 0, 32) or UDim2.new(0, 36, 0, 36)
+    CloseBtn.Size = isMobile and UDim2.new(0, 28, 0, 28) or UDim2.new(0, 32, 0, 32)
     CloseBtn.BackgroundColor3 = Color3.fromRGB(255, 80, 120)
     CloseBtn.Text = "×"
     CloseBtn.Font = Enum.Font.GothamBold
-    CloseBtn.TextSize = isMobile and 22 or 26
+    CloseBtn.TextSize = isMobile and 20 or 22
     CloseBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
     CloseBtn.BorderSizePixel = 0
     CloseBtn.BackgroundTransparency = 0.3
@@ -341,19 +341,19 @@ function Library:CreateWindow(config)
     for _, btn in pairs({MinimizeBtn, CloseBtn}) do
         btn.MouseEnter:Connect(function()
             Tween(btn, {BackgroundTransparency = 0}, 0.2)
-            Tween(btn, {Size = isMobile and UDim2.new(0, 34, 0, 34) or UDim2.new(0, 38, 0, 38)}, 0.2)
+            Tween(btn, {Size = isMobile and UDim2.new(0, 30, 0, 30) or UDim2.new(0, 34, 0, 34)}, 0.2)
         end)
         
         btn.MouseLeave:Connect(function()
             Tween(btn, {BackgroundTransparency = 0.3}, 0.2)
-            Tween(btn, {Size = isMobile and UDim2.new(0, 32, 0, 32) or UDim2.new(0, 36, 0, 36)}, 0.2)
+            Tween(btn, {Size = isMobile and UDim2.new(0, 28, 0, 28) or UDim2.new(0, 32, 0, 32)}, 0.2)
         end)
     end
     
     -- Tab Container with Glass Effect
     local TabContainer = Instance.new("Frame", MainFrame)
-    TabContainer.Size = isMobile and UDim2.new(0, 100, 1, -60) or UDim2.new(0, 140, 1, -70)
-    TabContainer.Position = isMobile and UDim2.new(0, 8, 0, 56) or UDim2.new(0, 10, 0, 66)
+    TabContainer.Size = isMobile and UDim2.new(0, 85, 1, -52) or UDim2.new(0, 110, 1, -57)
+    TabContainer.Position = isMobile and UDim2.new(0, 6, 0, 50) or UDim2.new(0, 8, 0, 56)
     TabContainer.BackgroundColor3 = Color3.fromRGB(20, 20, 35)
     TabContainer.BackgroundTransparency = 0.5
     TabContainer.BorderSizePixel = 0
@@ -375,8 +375,8 @@ function Library:CreateWindow(config)
     
     -- Page Container
     local PageContainer = Instance.new("Frame", MainFrame)
-    PageContainer.Size = isMobile and UDim2.new(1, -120, 1, -68) or UDim2.new(1, -162, 1, -78)
-    PageContainer.Position = isMobile and UDim2.new(0, 112, 0, 56) or UDim2.new(0, 152, 0, 66)
+    PageContainer.Size = isMobile and UDim2.new(1, -100, 1, -58) or UDim2.new(1, -126, 1, -63)
+    PageContainer.Position = isMobile and UDim2.new(0, 94, 0, 50) or UDim2.new(0, 120, 0, 56)
     PageContainer.BackgroundTransparency = 1
     
     -- Toggle GUI with Animation
